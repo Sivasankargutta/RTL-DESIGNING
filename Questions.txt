@@ -1,0 +1,294 @@
+Semaphore:
+ 1.why we need semaphore?
+   * when resource is lessthan process we use semaphore
+ 2. why we can't use mailbox  and event in place of semaphore?
+   * when synchronization needs in between different components
+     of a testbench we use semaphore.
+ 3.where we use mailbox?
+   * for class to class communication we use mailbox
+ 4.where we use event?
+   * within module or class when we have more than one process we
+     use event that which process should be run first.
+ 5.what is class?
+   * class:is user defined data type.
+   * it contains properties,methods(task,function)and constraints
+ 6.what is inheritance?
+   inheritance:
+    all properties,methods and constraints of base class become part 
+    of derived class (inheriting into child class)
+ 7.can I write class inside the module?
+    NO, write calss outside of module
+    modules are in static in nature
+    classes are in dynamic in nature
+
+ 8. what are the types of connections in TB?	
+	 There are three types of connection in the TB environment:
+	  1. class to class connection
+	  2. class to module connection
+	  3. modlule to module connection
+
+	1.class to class connection is done by using Mailbox.
+	2.Module to module connection is done by using Ports
+	2.class to module connection is done by interface.
+  9. what is static?
+	static:	Once i call anything, it will do two things:
+		1. Reference or pointing to a location.
+		2. Creating Memory.
+  10.what is Dynamic?
+    Dynamic:
+	1. Dynamic, only reference is getting happened and no memory
+	   allocation is getting happend in the call
+	2. I cant able to do any kind of calculation or storing in the
+	   class with out creating a handle.
+  11. what is meam by virtual?	   
+virtual:
+	Dont create any kind of memory but just use it for reference
+
+Clocking Blocking:
+
+  12. what is cloking bloking?
+	Clocking block: Clocking block, helps us to get clear of sampling issues.
+	 it is a piece of code where we instance all the signals with their
+	 directions and we will introduce the skews of the signals
+ 	
+	Clocking block consists of Signals of the design with their directions
+	 (inputs or outputs) according to the component ur driving.
+
+  13. Where this clocking block is written?
+		It is implemented in the interface.
+
+  14. For which components we will write clocking block?
+	  o The classes which interface introduced or the class which are
+		 connected to the interface, for that componenets or classes
+		 we will write clocking block.
+  15.What is skew?
+		Skew tell us at what time we need to sample the signals
+		There are two kinds of skews:
+			1. Input skew=> tells sample the inputs before the +ve edge of clock
+			2. Output skew=> tell that sample the ouputs after +ve edge of clock	 
+
+		* Design inputs should be driven just after the +ve edge of clock pulse
+		* Design outputs should be sample just before the +ve edge of clock pulse
+  16.Why physical in top module and virtual everywhere else in the Test bench?
+      * By writing virtual, we are telling tool not to allocate any memory,
+	    just declare the interface handle.
+      * By not writing virtual, we tell tool to allocate the memory,
+	    hence it is physical.
+      * If we use non-virtual(physical) interface at multiple
+	    places in the testbench.
+	  * Memory gets created in multiple places for same interface(ex: mem_intf)
+	  * Whatever update one component does, it will not reflect in othercomponent,
+	    since both of them are pointing to different memories.
+	  * Hence it is essential to keep all interface handles pointing to same memory.
+      * It is achieved using concept of one physical interface and rest all virtual
+	  *	interfaces, with virtual interfaces pointing to the physical interface memory.		 
+	   
+  17.What is physical interface and virtual interface?
+
+  * Physical interface is where memory is actually getting allocated
+    to interface signals. Virtual interface is only pointer (handle)
+	to the physical interface memory.
+  * Physical interface is defined in top module (always as a rule).
+  * Virtual interface is defined the classes (as a rule).	   
+  
+  18. why interface is used over module?
+   
+    * interface will collects all the interface requirements in single entity
+	* module can't be passed to another module in port list.
+
+  19. what are the components in interface?
+   
+    * ports 
+	* signals
+	* modport
+	* clocking-Blocking
+
+COVERAGE:
+ 20. what is coverage? 
+   o It tells how much percentage that all my testcases got completed.
+   o coverage is always in %.
+ 21. what are the types of coverages?
+   o Fucntional coverage
+   o Code coverage
+
+ 22. what is functional coverage?
+   o Tells like, whether all the properties from the TX class are going
+      to hit according to the testcase or not.
+ 23. why we need functional coverage?
+   o it is used to keep tracking the status of my project.
+
+ 24. How we implement the FC and what is the flow of FC?
+   o in the FC we will check all the bins has been hitted or not
+   o Flow of FC
+     * in the coverage group we have coverpoint.
+	 * inside the coverpoint we have bins.
+      covergroup ;
+	   coverpoint;
+	     {
+ 			bins;
+		 }
+	o if all the bins got hitted then the coverpoint considered as covered
+	o if all the coverpoints got covered the covergroup will be passed.
+  
+  25. what is coverpoint?
+    o coverpoint means what are the properties or variables need to be covered.
+  
+  26. what is bin?
+    o The values that coverpoint needs to be covered.
+  	o we can create the bins in 3 ways
+	   1. implicit 
+	   		o Bins will created by the tool based on the size
+	   2. Explicit
+	   		o we need to give the ranges of bins
+	   3. By using options
+			o By using option keyword bins will be created
+			o syntax:
+			    option.auto_bin_max=number;
+			o it will automatically create the bins and adjust the sizes	
+  27. what are the types of bins?
+    o bins
+	o ignore bins
+	o illegal bins
+  28. what are the types of FC?
+    o Normal FC
+	o Transition coverage
+	  * Transition coverage is used fo checking the value changes in previous 
+	    sampled state to current sample state. it mostly used in FSM.
+	o instance coverage
+  29. what are the types of coverages in FC?
+    o Transaction or packet coverage (used in protocols)
+	o user-defined coverage or scenario coverage
+  30. what is instance coverage?
+    o when we have Design with multiple interfaces we use instance coverage 
+	o we use same coverage group for all interfaces
+  31. How we implemet the instance coverage?
+    o coverage Definition outside the class scope,kept in global scope.
+	o user decides which coverage group should be sample and run.
+  32. what are the various options in coverage?
+    o auto_bin_max
+	o weight
+	o at_least
+	o goal
+	o comment
+	o name
+	o per_instance 
+	o detect_overlap
+ 33. what are various types of system tasks of FC?
+    o $set_coverage_db_name(file_name)
+	  * it sets the name for the coverage database into which coverage
+	    information is saved.
+	o $load_coverage_db(file_name)
+	  * loads from the coverage file name for all coverge group types.
+	o $get_coverage()
+	  * returns the real number the overall coverage of all coverage groups.
+  34.what is typedef?
+    o typedef is constructor used fo creating new data types by 
+	  using existing data type.
+  35.what is struct data-type?
+    o collection of different data-types in single entity.
+	o struct is static in nature
+  36.what is class?
+    o class is user-defined data_type 
+	o it consists of properties,methods,constraints.
+  37. what is the difference between class and struct?
+    o class is dynamic in nature, whereas struct is static in nature
+	o class consists of data_types,methods,constraints.
+	o struct consists of only datatypes.
+  38.what is union?
+    o Grouping of different datatypes in single entity,but all
+	  variables sharing common memory
+    o size of the memory is the size of the biggest datatype in the union.
+  39.what is Enum?
+    o Enum is datatype which is used to assign the values to english words.
+	o It makes code redability.
+  40.what is IPS?
+    o Achieving the synchronization between processis called IPS.
+  41.why we need Inter Process Synchronization(IPS)?
+    o Testbench has various components like gen,bfm,moniter,scoreboard.
+	o Each components has various process to achieve synchronization
+	   between these process we use IPS.
+  42.what are the 3 constructs for IPS?
+    o Event
+	o Mailbox
+	o Semahpore
+  43.what is Mailbox?
+    o Mailbox is communication channel between components.
+	o Mailbox is dynamic in nature.
+  44.why we use mailbox only why can't we use Queue's 
+      in between 2 TB components?
+	o mailbox methods are tasks whereas Queue and array methods
+	   are functions
+	o we can't achieve blocking nature in functions.
+	o Mailbox having a blocking nature.
+  45.what is mean by blocking nature?
+    o BFM should not proceed further getting tx if mailbox has
+	   no elements.
+	o Functions in Queue not achieving that blocking nature.
+  46. what are the methods in Mailbox?
+    o new(),put(),get(),try_put(),try_get(),num(),peek().
+  47. what are the types of Mailboxes?
+    1.parameterized mailbox
+	    o it can store only specific datatype variables or eth_pkt.
+	2.Non-parameterized mailbox
+		o it can store any kind of data variables.
+  48. Is it possible to achieve synchronization using Queue?
+    o Yes,we use wait statements.
+  49. what is event?
+    o whenever we need to achieve specific order of process 
+	   execution we use event.
+  50. what is difference between SV event and Verilog event?
+    o SV event is persistance in nature
+	o verilog event is Non-persistance in nature.
+  51. what is persistance and Non-persistance?
+    o persistance: Event will active for complete time step.
+	o Non-persistance: Event will be active only for that time instance only.
+  52. what is race-around condition?
+    o when two or more signals or processes compete to change the value of a
+	   shared variable at the same time, and the final state of 
+	   the variable becomes unpredictable. 
+	o This can lead to incorrect and inconsistent behavior in a digital system.
+  53.Differences in  SV and Verilog events?
+	o for wait in verilog: @(e);
+	o for wait in SV : wait(e.triggered());
+	o in SV multiple process can wait for same event, but not possible in verilog.
+	o we can deactivate the event by using null.
+	o Event can be passed to an argument to task or function.
+	o Event variable can be assigned to another event variable.
+  54. what is mean by pass by value and pass by reference?
+    o There are 2 ways of passing the arguments to function or task.
+
+	  1.pass by value: 
+	     o when we pass an argument to a function or task by value
+		   if any modifications made to the argument within the task or
+		   function do not affect the original value outside the task.
+	  2.pass by reference: 
+	     o when we pass an argument to a function or task by reference
+		   if any modifications made to the argument within the task or
+		   function that  affect the original value outside the task.
+  55. what is sheduling schematics?
+    o Rules followed during sheduling the simulation events.
+	o in verilog each part of time step divided into 4 parts.
+	o in SV each part of time step divided into 13 parts.
+
+  56.what is array?
+    o Homogenous collection of Elements in a single entity.
+  57.classification of arrays?
+      1.How memory is allocated.(packed and un-packed)
+	  2.When memory is allocated.(static and Dynamic)
+  58. what is packed array?
+    o Memory is allocated in single location.
+	o Is same as vector
+	  EX: bit [3:0]vector; // legal.
+	      int [3:0]vector; // illegal
+  59. Un-packed array?
+  	o Memory is allocated in multiple locations.
+    o un-packed array is same as array
+	  EX: int array[5:0];
+
+ 60. what is polymorphism?
+  * polymorphism means object with many forms
+  * it allows us to hold the child class methods with base class handle and
+    refer to the child class methods from base class
+  * it allows us to use child methods using parent handle if,
+      1.methods in parent should be virtual
+	  2. Method name should be same in both parent and child class.
